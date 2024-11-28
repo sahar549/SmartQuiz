@@ -86,7 +86,7 @@ const Home = () => {
       selectedDifficulty
     };
     try {
-      const response = await fetch('https://smart-quiz-git-main-sahars-projects-4092efbc.vercel.app/', {
+      const response = await fetch('https://smart-quiz-la1etwxhw-sahars-projects-4092efbc.vercel.app/', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
