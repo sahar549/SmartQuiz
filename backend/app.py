@@ -1,25 +1,26 @@
 import json
+import mysql.connector
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-#load environment variables from .env file
+# Load environment variables from .env file
 load_dotenv()
 
-#get the api key from .env file
+# Get the API key from .env file
 API_KEY = os.getenv('API_KEY')
 
-#initialize flask app
+# Initialize Flask app
 app = Flask(__name__)
-#enable CORS
+# Enable CORS
 CORS(app)
 
-#setup google gemini ai api key
+# Set up Google Gemini AI API key
 genai.configure(api_key=API_KEY)
 
-#model configuration
+# Model configuration
 generation_config = {
     "temperature": 0.8,
     "top_p": 0.9,
@@ -34,12 +35,27 @@ model = genai.GenerativeModel(
 )
 
 
-#define a route for generating quizes 
+# Database connection function
+def get_db_connection():
+    try:
+        connection = mysql.connector.connect(
+            host=os.getenv('DB_HOST'),  # e.g., localhost or your database host
+            database=os.getenv('DB_NAME'),  # Database name: 'quiz-ai'
+            user=os.getenv('DB_USER'),  # Database username: 'root'
+            password=os.getenv('DB_PASSWORD')  # Database password
+        )
+        return connection
+    except mysql.connector.Error as e:
+        print(f"Error connecting to the database: {e}")
+        return None
+
+
+# Define a route for generating quizzes
 @app.route('/', methods=['POST'])
 def get_quiz():
-    #get data from input form in json
+    # Get data from input form in JSON
     data = request.json
-    
+
     input_data = data.get('input')
     question_distribution = data.get('questionDistribution')
     difficulty = data.get('selectedDifficulty')
@@ -80,29 +96,49 @@ def get_quiz():
         "correct": ["A", "A"]
     }}
     ]
-    Please ensure the response is in **valid JSON** format and does not contain any extra explanations or characters. There are 3 levels of quiz difficulty: easy (treat as normal) - simple questions but creative; normal (treat as hard) - more intermediate, specific but creative questions that require effort; hard (treat as very hard) - very specific creative non generic questions, challenging, very intermediate. User has chosen: {difficulty}.Here is the topic: "{input_data}"
+    Please ensure the response is in **valid JSON** format and does not contain any extra explanations or characters. There are 3 levels of quiz difficulty: easy (treat as normal) - simple questions but creative; normal (treat as hard) - more intermediate, specific but creative questions that require effort; hard (treat as very hard) - very specific creative non-generic questions, challenging, very intermediate. User has chosen: {difficulty}. Here is the topic: "{input_data}"
     """
 
-
-
-    #start a chat session with ai model and give him a query
+    # Start a chat session with AI model and give him a query
     chat_session = model.start_chat()
     response = chat_session.send_message(prompt)
 
     quiz_json = response.text
     try:
-        # try to parse bot response as a JSON
-        # and convert it into python dictionary
+        # Try to parse bot response as JSON and convert it into python dictionary
         quiz_data = json.loads(quiz_json)
-        # todo: send retry prompt if failed
     except json.JSONDecodeError as e:
-        #raise an error while failed
+        # Raise an error if failed
         print(f"JSON decoding error: {e}")
         return jsonify({"error": "Failed to decode JSON response"}), 500
-    
-    #return json to client
+
+    # Save data to database
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            INSERT INTO quizzes (input_data, question_distribution, difficulty, quiz_response)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (input_data, json.dumps(question_distribution), difficulty, json.dumps(quiz_data))
+        )
+        connection.commit()
+    except mysql.connector.Error as e:
+        print(f"Error inserting data into database: {e}")
+        connection.rollback()
+        return jsonify({"error": "Failed to save quiz data"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    # Return the quiz data to the client
     return jsonify(quiz_data)
 
-# run the flask app!
+
+# Run the Flask app!
 if __name__ == '__main__':
     app.run(debug=True)

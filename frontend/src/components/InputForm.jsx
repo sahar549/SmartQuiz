@@ -6,7 +6,7 @@ const InputForm = ({ value, onChange, isFileMode, onFileUpload }) => {
       {!isFileMode ? (
         <textarea
           className="w-full h-60 sm:h-64 md:h-80 lg:h-96 p-4 border border-gray-200 rounded-xl resize-none"
-          placeholder="Write your note here or specific topic you want your Quizz about!"
+          placeholder="..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />

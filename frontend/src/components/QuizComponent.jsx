@@ -337,10 +337,9 @@ const handleOptionSelect = (gapOrValue, value = null) => {
     return (
       <div className="flex justify-center items-center min-h-screen mt-8">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-          <h2 className="text-xl font-bold mb-4">Quiz Results</h2>
-          <p>Your number of correct answers: {score}!</p>
-          <br/>
-          {renderIncorrectQuestions()}
+        <br/>
+        {/* {renderIncorrectQuestions()} */}
+        <h1> Great! Quiz Finished .</h1> 
         </div>
       </div>
     );

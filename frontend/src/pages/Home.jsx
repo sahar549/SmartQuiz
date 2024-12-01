@@ -86,7 +86,7 @@ const Home = () => {
       selectedDifficulty
     };
     try {
-      const response = await fetch('https://smart-quiz-la1etwxhw-sahars-projects-4092efbc.vercel.app/', {
+      const response = await fetch('http://localhost:5000/', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
@@ -121,14 +121,14 @@ const Home = () => {
               className={`rounded px-4 py-2 m-2 ${!isFileMode ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => setIsFileMode(false)}
             >
-              Note
+              Paste your course here   ^_^
             </button>
-            <button
+            {/* <button
               className={`rounded px-4 py-2 ${isFileMode ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => setIsFileMode(true)}
             >
               File
-            </button>
+            </button> */}
           </div>
             <InputForm
               value={inputValue}
@@ -169,7 +169,7 @@ const Home = () => {
                 </svg>
         
                 <p className='my-2'>generating your quizz, pleaseee wait!</p>
-                <p className='text-xs mt-2'>(if it's taking too long, refresh the page)</p>
+                {/* <p className='text-xs mt-2'>(if it's taking too long, refresh the page)</p> */}
               
             </div>
           </div>
