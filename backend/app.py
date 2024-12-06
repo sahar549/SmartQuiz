@@ -6,27 +6,25 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Get the API key from .env file
+
 API_KEY = os.getenv('API_KEY')
 
-# Initialize Flask app
+
 app = Flask(__name__)
-# Enable CORS
+
 CORS(app)
 
-# Set up Google Gemini AI API key
+
 genai.configure(api_key=API_KEY)
 
-# Model configuration
 generation_config = {
     "temperature": 0.8,
     "top_p": 0.9,
     "top_k": 80,
     "max_output_tokens": 1500,
-    "response_mime_type": "application/json",  # Ensure response is JSON
+    "response_mime_type": "application/json",  
 }
 
 model = genai.GenerativeModel(
@@ -35,25 +33,22 @@ model = genai.GenerativeModel(
 )
 
 
-# Database connection function
 def get_db_connection():
     try:
         connection = mysql.connector.connect(
-            host=os.getenv('DB_HOST'),  # e.g., localhost or your database host
-            database=os.getenv('DB_NAME'),  # Database name: 'quiz-ai'
-            user=os.getenv('DB_USER'),  # Database username: 'root'
-            password=os.getenv('DB_PASSWORD')  # Database password
-        )
+            host=os.getenv('DB_HOST'),  
+            database=os.getenv('DB_NAME'),  
+            user=os.getenv('DB_USER'),  
+            password=os.getenv('DB_PASSWORD')  )
         return connection
     except mysql.connector.Error as e:
         print(f"Error connecting to the database: {e}")
         return None
 
-
-# Define a route for generating quizzes
+ 
 @app.route('/', methods=['POST'])
 def get_quiz():
-    # Get data from input form in JSON
+    
     data = request.json
 
     input_data = data.get('input')
@@ -99,13 +94,11 @@ def get_quiz():
     Please ensure the response is in **valid JSON** format and does not contain any extra explanations or characters. There are 3 levels of quiz difficulty: easy (treat as normal) - simple questions but creative; normal (treat as hard) - more intermediate, specific but creative questions that require effort; hard (treat as very hard) - very specific creative non-generic questions, challenging, very intermediate. User has chosen: {difficulty}. Here is the topic: "{input_data}"
     """
 
-    # Start a chat session with AI model and give him a query
     chat_session = model.start_chat()
     response = chat_session.send_message(prompt)
 
     quiz_json = response.text
     try:
-        # Try to parse bot response as JSON and convert it into python dictionary
         quiz_data = json.loads(quiz_json)
     except json.JSONDecodeError as e:
         # Raise an error if failed

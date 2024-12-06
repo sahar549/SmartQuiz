@@ -4,11 +4,17 @@ const InputForm = ({ value, onChange, isFileMode, onFileUpload }) => {
   return (
     <div className="mb-4 w-full max-w-2xl mx-auto">
       {!isFileMode ? (
-        <textarea
+        <textarea 
           className="w-full h-60 sm:h-64 md:h-80 lg:h-96 p-4 border border-gray-200 rounded-xl resize-none"
-          placeholder="..."
+          placeholder="....."
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          
+          data-gramm="false" // Disables Grammarly
+          spellCheck="false" // Turns off spell-checking
+          autoCorrect="off" // Disables auto-correct
+         autoCapitalize="off" // Disables auto-capitalization
+
         />
       ) : (
         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-60 sm:h-64 md:h-80 lg:h-96 border-2 border-gray-300 border-solid rounded-xl cursor-pointer bg-gray-50 dark::bg-gray-300 dark:bg-gray-200 hover:bg-gray-100 dark:border-gray-200 dark:hover:border-gray-100hover">

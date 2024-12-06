@@ -9,7 +9,7 @@ const OpenQuestion = ({ question, onAnswerChange, selectedAnswer, questionCounte
         name="openAnswer"
         rows="5"
         className="w-full p-2 border border-gray-300 rounded"
-        placeholder="Type your answer here..."
+        placeholder="..."
         value={selectedAnswer}
         onChange={(e) => onAnswerChange(e.target.value)}
       />

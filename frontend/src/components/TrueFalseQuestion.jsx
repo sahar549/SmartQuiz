@@ -8,7 +8,7 @@ const TrueFalseQuestion = ({ question, correctOption, selectedOption, onOptionSe
       <div className='w-full mt-2 p-2 m-2 grid grid-cols-2 gap-2'>
       <button
           className={`px-4 py-2 rounded ${
-            selectedOption === 'false' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+            selectedOption === 'false' ? 'bg-fuchsia-500 text-white' : 'bg-gray-200 text-gray-700'
           }`}
           onClick={() => onOptionSelect('false')}
         >
@@ -16,7 +16,7 @@ const TrueFalseQuestion = ({ question, correctOption, selectedOption, onOptionSe
         </button>
         <button
           className={`px-4 py-2 rounded ${
-            selectedOption === 'true' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+            selectedOption === 'true' ? 'bg-fuchsia-500 text-white' : 'bg-gray-200 text-gray-700'
           }`}
           onClick={() => onOptionSelect('true')}
         >

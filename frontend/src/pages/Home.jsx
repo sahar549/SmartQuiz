@@ -86,7 +86,7 @@ const Home = () => {
       selectedDifficulty
     };
     try {
-      const response = await fetch('http://localhost:5000/', {
+      const response = await fetch('https://smart-quiz-sahars-projects-4092efbc.vercel.app/', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
@@ -111,17 +111,17 @@ const Home = () => {
     <>
       <Header isQuizDisplayed={!!quizData}/>
       
-      <div className="flex flex-col items-center p-4">
-      {!quizData && (
+      <div className="flex flex-col items-center p-4   bg-gradient-to-r from-purple-200 via-purple-200 to-purple-400 ">
+       {!quizData && (
         <>
-        <div className="flex justify-between w-full max-w-5xl">
+        <div className="flex justify-between w-full max-w-5xl ">
           <div className="w-3/5">
             <div className='align-top flex content-center items-center'>
             <button
-              className={`rounded px-4 py-2 m-2 ${!isFileMode ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              className={`rounded px-4 py-2 m-2 ${!isFileMode ? 'bg-fuchsia-500 text-white' : 'bg-gray-200'}`}
               onClick={() => setIsFileMode(false)}
             >
-              Paste your course here   ^_^
+              Paste your course here ↓
             </button>
             {/* <button
               className={`rounded px-4 py-2 ${isFileMode ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
@@ -138,15 +138,15 @@ const Home = () => {
             />
           </div>
       
-          <div className="w-2/5 ml-4">
-          <p className='text-xs'>Question types</p>
+          <div className="w-2/5 ml-5 ">
+          <p className='text-s '>Question types</p>
             <CheckboxForm
               checkedItems={checkedItems}
               onCheckboxChange={handleCheckboxChange}
             />
-            <p className='text-xs'>Number of questions</p>
+            <p className='text-s left'>Number of questions</p>
             <ButtonGroup selectedButton={selectedQuestionNumber} onButtonClick={setSelectedQuestionNumber} />
-            <p className='text-xs'>Difficulty level</p>
+            <p className='text-s'>Difficulty level</p>
             <DifficultyButtonGroup selectedButton={selectedDifficulty} onButtonClick={setSelectedDifficulty} />
           </div>
         </div>
